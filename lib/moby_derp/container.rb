@@ -101,7 +101,11 @@ module MobyDerp
 							}
 						}
 					end
-					params["ExposedPorts"] = Hash[@pod.expose.map { |ex| [ex, {}] }]
+					published_ports = Hash[@pod.publish.map { |pub| hport, cport = pub.split(":"); [cport, [{"HostIp" => "::", "HostPort" => hport}]] }]
+					exposed_ports = @pod.expose + published_ports.keys
+
+					params["ExposedPorts"] = Hash[exposed_ports.map { |ex| [ex, {}] }]
+					params["HostConfig"]["PortBindings"] = published_ports
 				else
 					params["HostConfig"] = {
 						"NetworkMode"   => "container:#{@pod.root_container_id}",

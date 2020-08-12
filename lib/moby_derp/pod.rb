@@ -90,6 +90,10 @@ module MobyDerp
 			@config.expose
 		end
 
+		def publish
+			@config.publish
+		end
+
 		private
 
 		def root_container
